@@ -1,0 +1,173 @@
+game_manager
+{
+	spawn
+	{
+		wait 50
+		wm_axis_respawntime 5		// Axis respawn time
+		wm_allied_respawntime 5	// Allied respawn time
+		wm_set_round_timelimit 45	// Map timelimit
+		
+		// Stopwatch mode defending team (0=Axis, 1=Allies)
+		wm_set_defending_team 0
+		
+		// Winner on expiration of round timer (0=Axis, 1=Allies)
+		wm_setwinner 0
+     }
+     
+      
+        trigger checkgame
+	{
+		globalaccum 0 abort_if_not_equal 3
+		wm_announce "The Allies have placed all TNT's!"
+		alertentity detonator
+        globalaccum 0 abort_if_not_equal 4
+        wm_announce "Allied have blown the atlantic wall"
+		wait 3000
+		wm_endround
+	}
+
+	
+
+
+}
+
+    
+    // ================================================
+
+    
+    assaultramp
+  {
+	spawn
+	{
+		wait 50
+		trigger self setup
+		constructible_class	2	// 2=Satchel 3=Dyna
+	}
+
+
+	trigger setup
+	{
+		setstate assaultramp_materials default	// Crate Models
+		setstate assaultramp_clip default		// Clip brushes
+		setstate assaultramp_flag default
+	}
+
+	
+    built final
+   {
+		setstate assaultramp_materials invisible	// Crate Models
+		setstate assaultramp_clip invisible	// Clip brushes
+		setstate assaultramp_flag invisible
+
+		wm_announce "^4Allied Team have built the assaultramp!"
+	}
+
+	decayed final
+	{
+		trigger self setup
+	}
+
+	death
+	{
+		trigger self setup
+		wm_announce "^1Axis have destroyed the assaultramp!" 
+	}
+    
+    
+ }
+  east_sidewall
+{
+	spawn
+	{
+		wait 300
+		constructible_class 3 // 2=satchel  3=dyna
+		constructible_constructxpbonus 10
+		constructible_destructxpbonus 10
+		
+
+
+	}
+
+	death
+	{
+		
+		trigger east_sidewall_toi remove
+
+        wm_announce "^1Axis have destroyed the east sidewall!"
+  	    alertentity east_debris
+        
+	}
+}
+
+east_sidewall_toi
+{
+	trigger remove
+	{
+		remove
+	}
+}
+
+
+
+
+ biggun
+{
+	spawn
+	{
+		wait 300
+		constructible_class 3 // 2=satchel  3=dyna
+		constructible_constructxpbonus 10
+		constructible_destructxpbonus 10
+		
+
+
+	}
+
+	death
+	{
+		
+		trigger biggun_toi remove
+
+        wm_announce "^1Allied have destroyed the BIG GUN!"
+        globalaccum 0 inc 1
+        trigger game_manager checkgame
+  	    alertentity biggun_dest
+        
+	}
+}
+
+biggun_toi
+{
+	trigger remove
+	{
+		remove
+	}
+}
+ 
+ 
+
+
+
+
+markers
+{
+    
+	spawn
+	{
+	 wait 500
+	 setstate second_hacabinet_cm_marker default
+	 setstate first_hacabinet_cm_marker default
+	}
+	
+}
+
+
+
+
+
+
+
+ 
+
+
+
